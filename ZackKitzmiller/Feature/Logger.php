@@ -1,10 +1,10 @@
-<?php
+<?php namespace ZackKitzmiller\Feature;
 
 /**
  * Logging -- for each feature that is checked we can log that it was
  * checked, what variant was choosen, and why.
  */
-class Feature_Logger {
+class Logger {
 
     /*
      * Log that the feature $name was checked with $variant selected

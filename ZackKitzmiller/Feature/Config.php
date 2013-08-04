@@ -1,4 +1,4 @@
-<?php
+<?php namespace ZackKitzmiller\Feature;
 
 /**
  * A feature that can be enabled, disabled, ramped up, and A/B tested,
@@ -6,7 +6,7 @@
  * should not be accessed directly but rather through the API provided
  * by Feature.php which is more convenient and provides some caching.
  */
-class Feature_Config {
+class Config {
 
     /* Keys used in a feature configuration. */
     const DESCRIPTION         = 'description';
@@ -369,7 +369,7 @@ class Feature_Config {
     // Configuration parsing
 
     private function parseDescription ($stanza) {
-        return Feature_Util::arrayGet($stanza, self::DESCRIPTION, 'No description.');
+        return Util::arrayGet($stanza, self::DESCRIPTION, 'No description.');
     }
 
     /*
@@ -377,7 +377,7 @@ class Feature_Config {
      */
     private function parseEnabled ($stanza) {
 
-        $enabled = Feature_Util::arrayGet($stanza, self::ENABLED, 0);
+        $enabled = Util::arrayGet($stanza, self::ENABLED, 0);
 
         if (is_numeric($enabled)) {
             if ($enabled < 0) {
@@ -427,7 +427,7 @@ class Feature_Config {
      * or group names to they variant they should see.
      */
     private function parseUsersOrGroups ($stanza, $what) {
-        $value = Feature_Util::arrayGet($stanza, $what);
+        $value = Util::arrayGet($stanza, $what);
         if (is_string($value) || is_numeric($value)) {
             // Users are configrued with their user names. Groups as
             // numeric ids. (Not sure if that's a great idea.)
@@ -467,7 +467,7 @@ class Feature_Config {
      * enabled map unless enabled is 'on' or 'off'.
      */
     private function parseVariantName ($stanza, $what) {
-        $value = Feature_Util::arrayGet($stanza, $what);
+        $value = Util::arrayGet($stanza, $what);
         if ($value) {
             if (is_array($this->_enabled)) {
                 if (array_key_exists($value, $this->_enabled)) {
@@ -484,11 +484,11 @@ class Feature_Config {
     }
 
     private function parsePublicURLOverride ($stanza) {
-        return Feature_Util::arrayGet($stanza, self::PUBLIC_URL_OVERRIDE, false);
+        return Util::arrayGet($stanza, self::PUBLIC_URL_OVERRIDE, false);
     }
 
     private function parseBucketBy ($stanza) {
-        return Feature_Util::arrayGet($stanza, self::BUCKETING, self::UAID);
+        return Util::arrayGet($stanza, self::BUCKETING, self::UAID);
     }
 
     ////////////////////////////////////////////////////////////////////////

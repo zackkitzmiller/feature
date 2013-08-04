@@ -1,9 +1,9 @@
-<?php
+<?php namespace ZackKitzmiller\Feature;
 
 /**
  * Utility functions.
  */
-class Feature_Util {
+class Util {
 
     /*
      * Get the value from an array if it is in fact an array and

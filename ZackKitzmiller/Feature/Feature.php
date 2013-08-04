@@ -1,4 +1,4 @@
-<?php
+<?php namespace ZackKitzmiller\Feature;
 
 /**
  * The public API testing whether a specific feature is enabled and,
@@ -27,6 +27,11 @@
  * that can be passed to templates and which provides the same API via
  * instance methods.
  */
+
+use ZackKitzmiller\Feature\Instance,
+    ZackKitzmiller\Feature\Logger,
+    ZackKitzmiller\Feature\World;
+
 class Feature {
 
     private static $defaultWorld;
@@ -39,7 +44,7 @@ class Feature {
      */
     public static function getInstance() {
         if (!isset(self::$instance)) {
-            self::$instance = new Feature_Instance();
+            self::$instance = new Instance();
         }
         return self::$instance;
     }
@@ -119,7 +124,7 @@ class Feature {
      * Logs an error if called when isEnabledFor($name, $user) doesn't
      * return true. (I.e. calls to this method should only occur in
      * blocks guarded by an isEnabledFor check.)
-
+     *
      * Also logs an error if 'enabled' is 'on' for the named feature
      * since there should be no variant-dependent code left when a
      * feature has been fully enabled. To clean up a finished
@@ -212,7 +217,7 @@ class Feature {
         } else {
             $world = self::world();
             $stanza = $world->configValue($name);
-            return self::$configCache[$name] = new Feature_Config($name, $stanza, $world);
+            return self::$configCache[$name] = new Config($name, $stanza, $world);
         }
     }
 
@@ -243,7 +248,7 @@ class Feature {
      */
     private static function world () {
         if (!isset(self::$defaultWorld)) {
-            self::$defaultWorld = new Feature_World(new Feature_Logger());
+            self::$defaultWorld = new World(new Logger());
         }
         return self::$defaultWorld;
     }

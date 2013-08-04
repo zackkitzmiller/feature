@@ -1,4 +1,4 @@
-<?php
+<?php namespace ZackKitzmiller\Feature;
 
 /**
  * The interface Feature_Config needs to the outside world. This class
@@ -8,7 +8,7 @@
  * passing stuff back and forth between here and Logger and Logger has
  * no useful independent existence.
  */
-class Feature_World {
+class World {
 
     private $_logger;
     private $_selections = array();
