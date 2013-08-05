@@ -45,7 +45,8 @@ class Config {
     /*
      * Construct a Config object from its config stanza.
      */
-    public function __construct($name, $stanza, $world) {
+    public function __construct($name, $stanza, $world)
+    {
         $this->_name  = $name;
         $this->_cache = array();
         $this->_world = $world;
@@ -83,7 +84,8 @@ class Config {
      * Is this feature enabled for the default id and the logged in
      * user, if any?
      */
-    public function isEnabled () {
+    public function isEnabled()
+    {
         $bucketingID = $this->bucketingID();
         $userID      = $this->_world->userID();
         return $this->chooseVariant($bucketingID, $userID, false) !== self::OFF;
@@ -93,7 +95,8 @@ class Config {
      * What variant is enabled for the default id and the logged in
      * user, if any?
      */
-    public function variant () {
+    public function variant()
+    {
         $bucketingID = $this->bucketingID();
         $userID      = $this->_world->userID();
         return $this->chooseVariant($bucketingID, $userID, true);;
@@ -102,7 +105,8 @@ class Config {
     /*
      * Is this feature enabled for the given user?
      */
-    public function isEnabledFor ($user) {
+    public function isEnabledFor($user)
+    {
         $userID = $this->getUserIdFrom($user);
         return $this->chooseVariant($userID, $userID, false) !== self::OFF;
     }
@@ -113,7 +117,8 @@ class Config {
      * variant such as users, groups, and query parameters, will still
      * work.)
      */
-    public function isEnabledBucketingBy ($bucketingID) {
+    public function isEnabledBucketingBy($bucketingID)
+    {
         $userID = $this->_world->userID();
         return $this->chooseVariant($bucketingID, $userID, false) !== self::OFF;
     }
@@ -121,7 +126,8 @@ class Config {
     /*
      * What variant is enabled for the given user?
      */
-    public function variantFor ($user) {
+    public function variantFor($user)
+    {
         $userID = $this->getUserIdFrom($user);
         return $this->chooseVariant($userID, $userID, true);
     }
@@ -130,7 +136,8 @@ class Config {
      * What variant is enabled, bucketing on the given bucketing ID,
      * if any?
      */
-    public function variantBucketingBy ($bucketingID) {
+    public function variantBucketingBy($bucketingID)
+    {
         $userID = $this->_world->userID();
         return $this->chooseVariant($bucketingID, $userID, true);;
     }
@@ -138,7 +145,8 @@ class Config {
     /*
      * Description of the feature.
      */
-    public function description () {
+    public function description()
+    {
         return $this->_description;
     }
 
@@ -149,7 +157,8 @@ class Config {
     /*
      * Accept different user objects and return user_id
      */
-    private function getUserIdFrom($user) {
+    private function getUserIdFrom($user)
+    {
         if ($user instanceof REST_User) {
             // $user->user_id is protected so not accessible
             return $user->getUserId();
@@ -179,7 +188,8 @@ class Config {
      * variantFor, in which case we want to perform some certain
      * sanity checks to make sure the code is being used correctly.
      */
-    private function chooseVariant ($bucketingID, $userID, $inVariantMethod) {
+    private function chooseVariant($bucketingID, $userID, $inVariantMethod)
+    {
         if ($inVariantMethod && $this->_enabled === self::ON) {
             $this->error("Variant check when fully enabled");
         }
@@ -234,7 +244,8 @@ class Config {
      * Return the globally accessible ID used by the one-arg isEnabled
      * and variant methods based on the feature's bucketing property.
      */
-    private function bucketingID () {
+    private function bucketingID()
+    {
         switch ($this->_bucketing) {
         case self::UAID:
         case self::RANDOM:
@@ -262,7 +273,8 @@ class Config {
      * meaning nothing was specified. Note that foo:off will turn off
      * the 'foo' feature.
      */
-    private function variantFromURL ($userID) {
+    private function variantFromURL($userID)
+    {
         if ($this->_public_url_override or
             $this->_world->isInternalRequest() or
             $this->_world->isAdmin($userID)
@@ -284,7 +296,8 @@ class Config {
      * Get the variant this user should see, if one was configured,
      * false otherwise.
      */
-    private function variantForUser ($userID) {
+    private function variantForUser($userID)
+    {
         if ($this->_users) {
             $name = $this->_world->userName($userID);
             if ($name && array_key_exists($name, $this->_users)) {
@@ -303,7 +316,8 @@ class Config {
      * practice we could make the configuration more complex. Or you
      * can just provide a specific variant via the 'users' property.
      */
-    private function variantForGroup ($userID) {
+    private function variantForGroup($userID)
+    {
         if ($userID) {
             foreach ($this->_groups as $groupID => $variant) {
                 if ($this->_world->inGroup($userID, $groupID)) {
@@ -318,7 +332,8 @@ class Config {
      * What variant, if any, should we return if the current user is
      * an admin.
      */
-    private function variantForAdmin ($userID) {
+    private function variantForAdmin($userID)
+    {
         if ($userID && $this->_adminVariant) {
             if ($this->_world->isAdmin($userID)) {
                 return array($this->_adminVariant, 'a');
@@ -330,7 +345,8 @@ class Config {
     /*
      * What variant, if any, should we return for internal requests.
      */
-    private function variantForInternal () {
+    private function variantForInternal()
+    {
         if ($this->_internalVariant) {
             if ($this->_world->isInternalRequest()) {
                 return array($this->_internalVariant, 'i');
@@ -344,7 +360,8 @@ class Config {
      * should see each variant to map a randomish number to a
      * particular variant.
      */
-    private function variantByPercentage ($id) {
+    private function variantByPercentage($id)
+    {
         $n = 100 * $this->randomish($id);
         foreach ($this->_percentages as $v) {
             // === 100 check may not be necessary but I'm not good
@@ -360,7 +377,8 @@ class Config {
      * A randomish number in [0, 1) based on the feature name and $id
      * unless we are bucketing completely at random.
      */
-    private function randomish ($id) {
+    private function randomish($id)
+    {
         return $this->_bucketing === self::RANDOM
             ? $this->_world->random() : $this->_world->hash($this->_name . '-' . $id);
     }
@@ -368,15 +386,16 @@ class Config {
     ////////////////////////////////////////////////////////////////////////
     // Configuration parsing
 
-    private function parseDescription ($stanza) {
+    private function parseDescription($stanza)
+    {
         return Util::arrayGet($stanza, self::DESCRIPTION, 'No description.');
     }
 
     /*
      * Parse the 'enabled' property of the feature's config stanza.
      */
-    private function parseEnabled ($stanza) {
-
+    private function parseEnabled($stanza)
+    {å
         $enabled = Util::arrayGet($stanza, self::ENABLED, 0);
 
         if (is_numeric($enabled)) {
@@ -401,7 +420,8 @@ class Config {
      * being the upper-boundary of the variants percentage and the
      * second element being the name of the variant.
      */
-    private function computePercentages () {
+    private function computePercentages()
+    {
         $total = 0;
         $percentages = array();
         if (is_array($this->_enabled)) {
@@ -426,7 +446,8 @@ class Config {
      * feature's config stanza, returning an array mappinng the user
      * or group names to they variant they should see.
      */
-    private function parseUsersOrGroups ($stanza, $what) {
+    private function parseUsersOrGroups($stanza, $what)
+    {
         $value = Util::arrayGet($stanza, $what);
         if (is_string($value) || is_numeric($value)) {
             // Users are configrued with their user names. Groups as
@@ -466,7 +487,8 @@ class Config {
      * properties. If non-falsy, must be one of the keys in the
      * enabled map unless enabled is 'on' or 'off'.
      */
-    private function parseVariantName ($stanza, $what) {
+    private function parseVariantName($stanza, $what)
+    {
         $value = Util::arrayGet($stanza, $what);
         if ($value) {
             if (is_array($this->_enabled)) {
@@ -483,11 +505,13 @@ class Config {
         }
     }
 
-    private function parsePublicURLOverride ($stanza) {
+    private function parsePublicURLOverride($stanza)
+    {
         return Util::arrayGet($stanza, self::PUBLIC_URL_OVERRIDE, false);
     }
 
-    private function parseBucketBy ($stanza) {
+    private function parseBucketBy ($stanza)
+    {
         return Util::arrayGet($stanza, self::BUCKETING, self::UAID);
     }
 
@@ -498,15 +522,18 @@ class Config {
      * Is the given object an array value that could have been created
      * with array(...) with no =>'s in the ...?
      */
-    private static function isList($a) {
+    private static function isList($a)
+    {
         return is_array($a) and array_keys($a) === range(0, count($a) - 1);
     }
 
-    private static function asArray ($x) {
+    private static function asArray($x)
+    {
         return is_array($x) ? $x : array($x);
     }
 
-    private function error ($message) {
+    private function error($message)
+    {
         // IMPLEMENT FOR YOUR CONTEXT
     }
 }

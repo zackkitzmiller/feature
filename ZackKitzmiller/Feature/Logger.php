@@ -11,7 +11,8 @@ class Logger {
      * by $selector. This is only called once per feature/bucketing id
      * per request.
      */
-    public function log ($name, $variant, $selector) {
+    public function log($name, $variant, $selector)
+    {
     }
 
 }

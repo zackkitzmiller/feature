@@ -1,21 +1,23 @@
-<?php
+<?php namespace ZackKitzmiller\Feature;
 
 /*
  * Utility for turning configs into JSON-encodeable data.
  */
-class Feature_JSON {
+class JSON {
 
     /*
      * Return the given config stanza as an array that can be json
      * encoded in a form that is slightly easier to deal with in
      * Javascript.
      */
-    public static function stanza ($key, $server_config=null) {
+    public static function stanza($key, $server_config = null)
+    {
         $stanza = self::findStanza($key, $server_config);
         return $stanza !== false ? self::translate($key, $stanza) : false;
     }
 
-    private static function findStanza($key, $cursor) {
+    private static function findStanza($key, $cursor)
+    {
         $step = strtok($key, '.');
         while ($step) {
             if (is_array($cursor) && array_key_exists($step, $cursor)) {
@@ -28,8 +30,8 @@ class Feature_JSON {
         return $cursor;
     }
 
-    private static function translate ($key, $value) {
-
+    private static function translate ($key, $value)
+    {
         $spec = self::makeSpec($key);
 
         $internal_url = true;
@@ -84,7 +86,8 @@ class Feature_JSON {
         return $spec;
     }
 
-    private static function makeSpec ($key) {
+    private static function makeSpec($key)
+    {
         return array(
             'key' => $key,
             'internal_url_override' => false,
@@ -95,7 +98,8 @@ class Feature_JSON {
             'variants' => array());
     }
 
-    private static function makeVariant ($name, $percentage) {
+    private static function makeVariant($name, $percentage)
+    {
         return array(
             'name' => $name,
             'percentage' => $percentage,
@@ -103,7 +107,8 @@ class Feature_JSON {
             'groups' => array());
     }
 
-    private static function makeVariantWithUsersAndGroups ($name, $percentage, $users, $groups) {
+    private static function makeVariantWithUsersAndGroups($name, $percentage, $users, $groups)
+    {
         return array(
             'name'       => $name,
             'percentage' => $percentage,
@@ -112,7 +117,8 @@ class Feature_JSON {
         );
     }
 
-    private static function extractForVariant ($usersOrGroups, $name) {
+    private static function extractForVariant($usersOrGroups, $name)
+    {
         $result = array();
         foreach ($usersOrGroups as $thing => $variant) {
             if ($variant == $name) {
@@ -125,7 +131,8 @@ class Feature_JSON {
     // This is based on parseUsersOrGroups in Feature_Config. Probably
     // this logic should be put in that class in a form that we can
     // use.
-    private static function expandUsersOrGroups ($value) {
+    private static function expandUsersOrGroups($value)
+    {
         if (is_string($value) || is_numeric($value)) {
             return array($value => Feature_Config::ON);
 
@@ -150,11 +157,13 @@ class Feature_JSON {
         }
     }
 
-    private static function isList($a) {
+    private static function isList($a)
+    {
         return is_array($a) and array_keys($a) === range(0, count($a) - 1);
     }
 
-    private static function asArray ($x) {
+    private static function asArray($x)
+    {
         return is_array($x) ? $x : array($x);
     }
 

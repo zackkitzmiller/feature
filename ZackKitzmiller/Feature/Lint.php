@@ -17,7 +17,8 @@ class Feature_Lint {
     private $_errors;
     private $_path;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->_checked = 0;
         $this->_errors  = array();
         $this->_path    = array();
@@ -39,21 +40,25 @@ class Feature_Lint {
         );
     }
 
-    public function run($file = null) {
+    public function run($file = null)
+    {
         $config = $this->fromFile($file);
         $this->assert($config, "*** Bad configuration.");
         $this->lintNested($config);
     }
 
-    public function checked() {
+    public function checked()
+    {
         return $this->_checked;
     }
 
-    public function errors() {
+    public function errors()
+    {
         return $this->_errors;
     }
 
-    private function fromFile($file) {
+    private function fromFile($file)
+    {
         global $server_config;
         $content = file_get_contents($file);
         error_reporting(0);
@@ -73,7 +78,8 @@ class Feature_Lint {
      * Recursively check nested feature configurations. Skips any keys
      * that have a syntactic meaning which includes 'data'.
      */
-    private function lintNested($config) {
+    private function lintNested($config)
+    {
         foreach ($config as $name => $stanza) {
             if (!in_array($name, $this->syntax_keys)) {
                 $this->lint($name, $stanza);
@@ -81,7 +87,8 @@ class Feature_Lint {
         }
     }
 
-    private function lint($name, $stanza) {
+    private function lint($name, $stanza)
+    {
         array_push($this->_path, $name);
         $this->_checked += 1;
         if (is_array($stanza)) {
@@ -100,14 +107,16 @@ class Feature_Lint {
         array_pop($this->_path);
     }
 
-    private function assert($ok, $message) {
+    private function assert($ok, $message)
+    {
         if (!$ok) {
             $loc = "[" . implode('.', $this->_path) . "]";
             array_push($this->_errors, "$loc $message");
         }
     }
 
-    private function checkForOldstyle($stanza) {
+    private function checkForOldstyle($stanza)
+    {
         $enabled = Feature_Util::arrayGet($stanza, Feature_Config::ENABLED, 0);
         $rampup  = Feature_Util::arrayGet($stanza, 'rampup', null);
         $this->assert($enabled !== 'rampup' || !$rampup, "Old-style config syntax detected.");
@@ -116,7 +125,8 @@ class Feature_Lint {
     // 'enabled' must be a string, a number in [0,100], or an array of
     // (string => ints) such that the ints are all in [0,100] and the
     // total is <= 100.
-    private function checkEnabled($stanza) {
+    private function checkEnabled($stanza)
+    {
         if (array_key_exists(Feature_Config::ENABLED, $stanza)) {
             $enabled = $stanza[Feature_Config::ENABLED];
             if (is_numeric($enabled)) {
@@ -139,7 +149,8 @@ class Feature_Lint {
         }
     }
 
-    private function checkUsers($stanza) {
+    private function checkUsers($stanza)
+    {
         if (array_key_exists(Feature_Config::USERS, $stanza)) {
             $users = $stanza[Feature_Config::USERS];
             if (is_array($users) && !self::isList($users)) {
@@ -153,7 +164,8 @@ class Feature_Lint {
         }
     }
 
-    private function checkUserValue($users) {
+    private function checkUserValue($users)
+    {
         $this->assert(is_string($users) || self::isList($users), Feature_Config::USERS . " must be string or list of strings: '$users'");
         if (self::isList($users)) {
             foreach ($users as $user) {
@@ -162,7 +174,8 @@ class Feature_Lint {
         }
     }
 
-    private function checkGroups($stanza) {
+    private function checkGroups($stanza)
+    {
         if (array_key_exists(Feature_Config::GROUPS, $stanza)) {
             $groups = $stanza[Feature_Config::GROUPS];
             if (is_array($groups) && !self::isList($groups)) {
@@ -176,7 +189,8 @@ class Feature_Lint {
         }
     }
 
-    private function checkGroupValue($groups) {
+    private function checkGroupValue($groups)
+    {
         $this->assert(is_numeric($groups) || self::isList($groups), Feature_Config::GROUPS . " must be number or list of numbers");
         if (self::isList($groups)) {
             foreach ($groups as $group) {
@@ -186,21 +200,24 @@ class Feature_Lint {
     }
 
 
-    private function checkAdmin($stanza) {
+    private function checkAdmin($stanza)
+    {
         if (array_key_exists(Feature_Config::ADMIN, $stanza)) {
             $admin = $stanza[Feature_Config::ADMIN];
             $this->assert(is_string($admin), "Admin must be string naming variant: '$admin'");
         }
     }
 
-    private function checkInternal($stanza) {
+    private function checkInternal($stanza)
+    {
         if (array_key_exists(Feature_Config::INTERNAL, $stanza)) {
             $internal = $stanza[Feature_Config::INTERNAL];
             $this->assert(is_string($internal), "Internal must be string naming variant: '$internal'");
         }
     }
 
-    private function checkPublicURLOverride($stanza) {
+    private function checkPublicURLOverride($stanza)
+    {
         if (array_key_exists(Feature_Config::PUBLIC_URL_OVERRIDE, $stanza)) {
             $public_url_override = $stanza[Feature_Config::PUBLIC_URL_OVERRIDE];
             $this->assert(is_bool($public_url_override), "public_url_override must be a boolean: '$public_url_override'");
@@ -210,7 +227,8 @@ class Feature_Lint {
         }
     }
 
-    private function checkBucketing($stanza) {
+    private function checkBucketing($stanza)
+    {
         if (array_key_exists(Feature_Config::BUCKETING, $stanza)) {
             $bucketing = $stanza[Feature_Config::BUCKETING];
             $this->assert(is_string($bucketing), "Non-string bucketing: '$bucketing'");
@@ -218,7 +236,8 @@ class Feature_Lint {
         }
     }
 
-    private static function isList($a) {
+    private static function isList($a)
+    {
         return is_array($a) and array_keys($a) === range(0, count($a) - 1);
     }
 }

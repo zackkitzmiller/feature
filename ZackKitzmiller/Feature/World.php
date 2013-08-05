@@ -13,28 +13,32 @@ class World {
     private $_logger;
     private $_selections = array();
 
-    public function __construct ($logger) {
+    public function __construct($logger)
+    {
         $this->_logger = $logger;
     }
 
     /*
      * Get the config value for the given key.
      */
-    public function configValue($name, $default = null) {
+    public function configValue($name, $default = null)
+    {
         return $default; // IMPLEMENT FOR YOUR CONTEXT
     }
 
     /**
      * UAID of the current request.
      */
-    public function uaid() {
+    public function uaid()
+    {
         return null; // IMPLEMENT FOR YOUR CONTEXT
     }
 
     /**
      * User ID of the currently logged in user or null.
      */
-    public function userID () {
+    public function userID()
+    {
         return null; // IMPLEMENT FOR YOUR CONTEXT
     }
 
@@ -43,7 +47,8 @@ class World {
      * ORM. If we're running as part of an Atlas request we ignore the
      * passed in userID and return instead the Atlas user name.
      */
-    public function userName ($userID) {
+    public function userName($userID)
+    {
         return null; // IMPLEMENT FOR YOUR CONTEXT
     }
 
@@ -54,7 +59,8 @@ class World {
      * the primary key and we save having to look up the group by
      * name.)
      */
-    public function inGroup ($userID, $groupID) {
+    public function inGroup($userID, $groupID)
+    {
         return null; // IMPLEMENT FOR YOUR CONTEXT
     }
 
@@ -64,35 +70,40 @@ class World {
      * @param $userID the id of the relevant user, either the
      * currently logged in user or some other user.
      */
-    public function isAdmin ($userID) {
+    public function isAdmin($userID)
+    {
         return false; // IMPLEMENT FOR YOUR CONTEXT
     }
 
     /**
      * Is this an internal request?
      */
-    public function isInternalRequest () {
+    public function isInternalRequest()
+    {
         return false; // IMPLEMENT FOR YOUR CONTEXT
     }
 
     /*
      * 'features' query param for url overrides.
      */
-    public function urlFeatures () {
+    public function urlFeatures()
+    {
         return array_key_exists('features', $_GET) ? $_GET['features'] : '';
     }
 
     /*
      * Produce a random number in [0, 1) for RANDOM bucketing.
      */
-    public function random () {
+    public function random()
+    {
         return mt_rand(0, mt_getrandmax() - 1) / mt_getrandmax();
     }
 
     /*
      * Produce a randomish number in [0, 1) based on the given id.
      */
-    public function hash ($id) {
+    public function hash($id)
+    {
         return self::mapHex(hash('sha256', $id));
     }
 
@@ -100,7 +111,8 @@ class World {
      * Record that $variant has been selected for feature named $name
      * by $selector and pass the same information along to the logger.
      */
-    public function log ($name, $variant, $selector) {
+    public function log($name, $variant, $selector)
+    {
         $this->_selections[] = array($name, $variant, $selector);
         $this->_logger->log($name, $variant, $selector);
     }
@@ -110,7 +122,8 @@ class World {
      * API for getting at the selections is Feature::selections which
      * should be the only caller of this method.
      */
-    public function selections () {
+    public function selections()
+    {
         return $this->_selections;
     }
 
@@ -121,7 +134,8 @@ class World {
      * @param string $hex a hex string
      * @return float
      */
-    private static function mapHex($hex) {
+    private static function mapHex($hex)
+    {
         $len = min(40, strlen($hex));
         $vMax = 1 << $len;
         $v = 0;

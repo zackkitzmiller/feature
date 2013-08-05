@@ -13,21 +13,25 @@ class Mobile extends World {
     private $_variant;
     private $_selector;
 
-    public function __construct ($udid, $userID, $logger) {
+    public function __construct($udid, $userID, $logger)
+    {
         parent::__construct($logger);
         $this->_udid = $udid;
         $this->_userID = $userID;
     }
 
-    public function uaid() {
+    public function uaid()
+    {
         return $this->_udid;
     }
 
-    public function userID () {
+    public function userID()
+    {
         return $this->_userID;
     }
 
-    public function log ($name, $variant, $selector) {
+    public function log($name, $variant, $selector)
+    {
         parent::log($name, $variant, $selector);
 
         $this->_name = $name;
@@ -35,19 +39,23 @@ class Mobile extends World {
         $this->_selector = $selector;
     }
 
-    public function getLastName() {
+    public function getLastName()
+    {
         return $this->_name;
     }
 
-    public function getLastVariant() {
+    public function getLastVariant()
+    {
         return $this->_variant;
     }
 
-    public function getLastSelector() {
+    public function getLastSelector()
+    {
         return $this->_selector;
     }
 
-    public function clearLastFeature() {
+    public function clearLastFeature()
+    {
         $this->_selector = null;
         $this->_name = null;
         $this->_variant = null;

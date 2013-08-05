@@ -42,7 +42,8 @@ class Feature {
      * Get an object that can be passed to Smarty templates that wraps
      * our API with non-static methods of the same names and arguments.
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!isset(self::$instance)) {
             self::$instance = new Instance();
         }
@@ -56,7 +57,8 @@ class Feature {
      * @param string $name the config key for this feature.
      * @return bool
      */
-    public static function isEnabled ($name) {
+    public static function isEnabled($name)
+    {
         return self::fromConfig($name)->isEnabled();
     }
 
@@ -74,7 +76,8 @@ class Feature {
      *
      * @return bool
      */
-    public static function isEnabledFor($name, $user) {
+    public static function isEnabledFor($name, $user)
+    {
         return self::fromConfig($name)->isEnabledFor($user);
     }
 
@@ -91,7 +94,8 @@ class Feature {
      *
      * @return bool
      */
-    public static function isEnabledBucketingBy($name, $string) {
+    public static function isEnabledBucketingBy($name, $string)
+    {
         return self::fromConfig($name)->isEnabledBucketingBy($string);
     }
 
@@ -110,7 +114,8 @@ class Feature {
      * @static
      * @param string $name the config key for the feature.
      */
-    public static function variant($name) {
+    public static function variant($name)
+    {
         return self::fromConfig($name)->variant();
     }
 
@@ -138,7 +143,8 @@ class Feature {
      * @param $user A user object whose id will be combined with $name
      * and hashed to get the bucketing.
      */
-    public static function variantFor($name, $user) {
+    public static function variantFor($name, $user)
+    {
         return self::fromConfig($name)->variantFor($user);
     }
 
@@ -164,14 +170,16 @@ class Feature {
      *
      * @param string $bucketingID A string to use as the bucketing ID.
      */
-    public static function variantBucketingBy($name, $bucketingID) {
+    public static function variantBucketingBy($name, $bucketingID)
+    {
         return self::fromConfig($name)->variantBucketingBy($bucketingID);
     }
 
     /*
      * Description of the feature.
      */
-    public static function description ($name) {
+    public static function description($name)
+    {
         return self::fromConfig($name)->description();
     }
 
@@ -183,7 +191,8 @@ class Feature {
      *
      * @return mixed
      */
-    public static function data($name, $default = array()) {
+    public static function data($name, $default = array())
+    {
         return self::world()->configValue("$name.data", $default);
     }
 
@@ -195,7 +204,8 @@ class Feature {
      *
      * @return mixed
      */
-    public static function variantData($name, $default = array()) {
+    public static function variantData($name, $default = array())
+    {
         $data    = self::data($name);
         $variant = self::variant($name);
         return isset($data[$variant]) ? $data[$variant] : $default;
@@ -211,7 +221,8 @@ class Feature {
      *
      * @return Feature_Config
      */
-    private static function fromConfig($name) {
+    private static function fromConfig($name)
+    {
         if (array_key_exists($name, self::$configCache)) {
             return self::$configCache[$name];
         } else {
@@ -227,7 +238,8 @@ class Feature {
      * cached but in tests we need to change the configuration and
      * have those changes be reflected in feature checks.)
      */
-    public static function clearCacheForTests() {
+    public static function clearCacheForTests()
+    {
         self::$configCache = array();
     }
 
@@ -238,7 +250,8 @@ class Feature {
      * to record information about what features were associated with
      * what variants and why during the course of handling a request.
      */
-    public static function selections () {
+    public static function selections()
+    {
         return self::world()->selections();
     }
 
@@ -246,7 +259,8 @@ class Feature {
      * This API always uses the default World. Feature_Config takes
      * the world as an argument in order to ease unit testing.
      */
-    private static function world () {
+    private static function world()
+    {
         if (!isset(self::$defaultWorld)) {
             self::$defaultWorld = new World(new Logger());
         }
